@@ -119,3 +119,36 @@ export default useArray;
   );
 };
  ```
+
+  3. [useMemoArray](https://github.com/KrushalSonani/custom-hooks-array/tree/main/src/useMemoArray)
+  >This custom hook that memoizes an array based on a set of dependencies.
+
+  ```
+ import { useMemo } from 'react';
+
+const useMemoArray = (array, dependencies) => {
+  const memoizedArray = useMemo(() => array, dependencies);
+  return memoizedArray;
+};
+
+export default useMemoArray;
+```
+
+  >How to use:
+  ```
+  import useMemoArray from './useMemoArray';
+
+const MyComponent = ({ items, searchTerm }) => {
+  const filteredItems = useMemoArray(
+    items.filter((item) => item.name.includes(searchTerm)),
+    [items, searchTerm]
+  );
+
+  return (
+    <ul>
+      {filteredItems.map((item) => (
+        <li key={item.id}>{item.name}</li>
+      ))}
+    </ul>
+  );
+};
