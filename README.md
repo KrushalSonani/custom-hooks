@@ -119,3 +119,108 @@ export default useArray;
   );
 };
  ```
+
+  3. [useMemoArray](https://github.com/KrushalSonani/custom-hooks-array/tree/main/src/useMemoArray)
+  >This custom hook that memoizes an array based on a set of dependencies.
+
+  ```
+ import { useMemo } from 'react';
+
+const useMemoArray = (array, dependencies) => {
+  const memoizedArray = useMemo(() => array, dependencies);
+  return memoizedArray;
+};
+
+export default useMemoArray;
+```
+
+  >How to use:
+  ```
+  import useMemoArray from './useMemoArray';
+
+const MyComponent = ({ items, searchTerm }) => {
+  const filteredItems = useMemoArray(
+    items.filter((item) => item.name.includes(searchTerm)),
+    [items, searchTerm]
+  );
+
+  return (
+    <ul>
+      {filteredItems.map((item) => (
+        <li key={item.id}>{item.name}</li>
+      ))}
+    </ul>
+  );
+};
+```
+
+4. [useSort](https://github.com/KrushalSonani/custom-hooks-array/tree/main/src/useSort)
+>here's an example of a custom dynamic useSort hook:
+
+```
+const useSort = (array, key, direction) => {
+  const [sortedArray, setSortedArray] = useState([]);
+
+  useEffect(() => {
+    const sorted = [...array].sort((a, b) => {
+      if (a[key] < b[key]) {
+        return direction === "asc" ? -1 : 1;
+      }
+      if (a[key] > b[key]) {
+        return direction === "asc" ? 1 : -1;
+      }
+      return 0;
+    });
+
+    setSortedArray(sorted);
+  }, [array, key, direction]);
+
+  return sortedArray;
+};
+```
+>How to use:
+
+```
+const App = () => {
+  const users = [
+    { name: "Alice", age: 32 },
+    { name: "Bob", age: 25 },
+    { name: "Charlie", age: 42 },
+  ];
+
+  const [sortKey, setSortKey] = useState("name");
+  const [sortDirection, setSortDirection] = useState("asc");
+
+  const sortedUsers = useSort(users, sortKey, sortDirection);
+
+  return (
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th onClick={() => setSortKey("name")}>
+              Name {sortKey === "name" ? (sortDirection === "asc" ? "↑" : "↓") : ""}
+            </th>
+            <th onClick={() => setSortKey("age")}>
+              Age {sortKey === "age" ? (sortDirection === "asc" ? "↑" : "↓") : ""}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {sortedUsers.map((user, index) => (
+            <tr key={index}>
+              <td>{user.name}</td>
+              <td>{user.age}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button onClick={() => setSortDirection(sortDirection === "asc" ? "desc" : "asc")}>
+        Toggle Sort Direction
+      </button>
+    </div>
+  );
+};
+```
+
+>In this example, the useSort hook takes an array of objects, a key to sort by, and a direction (either "asc" or "desc"). The hook returns a sorted array based on the given parameters. The example then uses this hook to sort a list of users in a table, with the ability to toggle the sort direction by clicking a button.
